@@ -27,10 +27,19 @@ void tunnelRender(){
 		
 	for (int i = 0; i < rects; ++i) {
 
-		int rand = (int)map(knob[10], 0, 100, 0, 255);
-		int gray = rand + (50 * (i + 1));
-		color fillC = color(gray);
-		shadow_1 = color(60, 60);
+		int alpha = (int)map(knob[10], 0, 100, 0, 255);
+		// int gray = rand + (50 * (i + 1));
+		color selectC = color(255);
+
+		if(pad[0]) selectC = colors_1[0];
+		if(pad[1]) selectC = colors_1[1];
+		if(pad[2]) selectC = colors_1[2];
+		if(pad[3]) selectC = colors_1[3];
+		if(pad[4]) selectC = colors_1[4];
+
+		color fillC = color(selectC, alpha);
+
+		shadow_1 = color(40, 40);
 		shadow_2 = color(0, 1);
 
 		noStroke();

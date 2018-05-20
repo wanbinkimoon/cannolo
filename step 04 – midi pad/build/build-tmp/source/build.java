@@ -124,7 +124,6 @@ MidiBus myBus;
 // ================================================================
 
 public void controllerChange(int channel, int number, int value) {  
-
 	midiUpdate(channel, number, value);
 
   // Receive a controllerChange
@@ -138,9 +137,6 @@ public void controllerChange(int channel, int number, int value) {
 
 // ================================================================
 
-public void noteOn(int channel, int pitch, int velocity) {
-    println(channel, pitch, velocity);
-}
 
 int knobNumb = 16;
 int[] knob = new int[knobNumb];
@@ -175,6 +171,52 @@ public void midiUpdate(int channel, int number, int value){
 public void midiMonitor(){
 	knobTable = "\n\n_________________________________________________________________________________________________________________________________\n|  001  |  002  |  003  |  004  |  005  |  006  |  007  |  008  |  009  |  010  |  011  |  012  |  013  |  014  |  015  |  016  |\n|  "+ String.format("%03d", knob[0]) +"  |  "+ String.format("%03d", knob[1]) +"  |  "+ String.format("%03d", knob[2]) +"  |  "+ String.format("%03d", knob[3]) +"  |  "+ String.format("%03d", knob[4]) +"  |  "+ String.format("%03d", knob[5]) +"  |  "+ String.format("%03d", knob[6]) +"  |  "+ String.format("%03d", knob[7]) +"  |  "+ String.format("%03d", knob[8]) +"  |  "+ String.format("%03d", knob[9]) +"  |  "+ String.format("%03d", knob[10]) +"  |  "+ String.format("%03d", knob[11]) +"  |  "+ String.format("%03d", knob[12]) +"  |  "+ String.format("%03d", knob[13]) +"  |  "+ String.format("%03d", knob[14]) +"  |  "+ String.format("%03d", knob[15]) +"  |\n_________________________________________________________________________________________________________________________________";
 	println(knobTable);
+}
+
+// ================================================================
+
+int padNumb = 8;
+boolean[] pad = new boolean[padNumb];
+
+// ================================================================
+
+public void noteOn(int channel, int number, int value) {
+	padSwitch(channel, number, value);
+
+  // Receive a controllerChange
+  // println();
+  // println("Controller Change:");
+  // println("--------");
+  // println("Channel:" + channel);
+  // println("Number:" + number);
+  // println("Value:" + value);
+}
+
+public void padSwitch(int channel, int number, int value){
+	if(number ==  9) pad[0] = !pad[0];
+	if(number == 10) pad[1] = !pad[1];
+	if(number == 11) pad[2] = !pad[2];
+	if(number == 12) pad[3] = !pad[3];
+	if(number == 25) pad[4] = !pad[4];
+	if(number == 26) pad[5] = !pad[5];
+	if(number == 27) pad[6] = !pad[6];
+	if(number == 28) pad[7] = !pad[7];
+
+	padMonitor();
+}
+
+public void padMonitor(){
+	print("  0: " + pad[0]);
+	print("  1: " + pad[1]);
+	print("  2: " + pad[2]);
+	print("  3: " + pad[3]);
+	print("  4: " + pad[4]);
+	print("  5: " + pad[5]);
+	print("  6: " + pad[6]);
+	print("  7: " + pad[7] + "\n");
+	println();
+	println("____________________\n");
+	println();
 }
 int Y_AXIS = 1;
 int X_AXIS = 2;

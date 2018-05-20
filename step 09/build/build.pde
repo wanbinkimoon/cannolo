@@ -1,13 +1,13 @@
-int stageW      = 800;
+ int stageW      = 800;
 int stageH      = 800;
-color bgC       = #FF7700;
+color bgC       = #2F2F2F;
 String dataPATH = "../../data";
 
 // ================================================================
 
 void settings(){ 
 	size(stageW, stageH);
-	// fullscreen();
+	// fullScreen();
 }
 
 // ================================================================

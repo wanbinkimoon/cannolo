@@ -30,7 +30,7 @@ void tunnelRender(){
 		int rand = (int)map(knob[10], 0, 100, 0, 255);
 		int gray = rand + (50 * (i + 1));
 		color fillC = color(gray);
-		shadow_1 = color(60, 60);
+		shadow_1 = color(40, 40);
 		shadow_2 = color(0, 1);
 
 		noStroke();
