@@ -5,6 +5,7 @@ import processing.opengl.*;
 
 import ddf.minim.*; 
 import ddf.minim.analysis.*; 
+import peasy.*; 
 import themidibus.*; 
 
 import java.util.HashMap; 
@@ -26,7 +27,7 @@ String dataPATH = "../../data";
 // ================================================================
 
 public void settings(){ 
-	size(stageW, stageH);
+	size(stageW, stageH, P3D);
 	// fullScreen();
 }
 
@@ -37,6 +38,7 @@ public void setup() {
 	midiSetup();
 	tunnelColorSettings();
 	audioSettings();
+	camSettings();
 }
 
 // ================================================================
@@ -44,6 +46,7 @@ public void draw() {
 	background(bgC);
 	tunnelRender();
 	audioDataUpdate();
+	camUpdate();
 }
 
 
@@ -115,6 +118,28 @@ public void audioDataUpdate(){
     audioIndex = map(knob[6], 0, 100, 50, 100);
     audioIndexStep = map(knob[7], 0, 100, 2.5f, 100);
   }
+
+
+// ================================================================
+
+PeasyCam cam;
+
+// ================================================================
+
+public void camSettings(){
+	cam = new PeasyCam(this, 1200 * -40 );
+	cam.rotateX(35);
+	cam.rotateY(45);
+}
+
+// ================================================================
+
+public void camUpdate(){
+	cam.rotateX((float)knob[0] / 1000);
+	cam.rotateY((float)knob[1] / 1000);
+	cam.rotateZ((float)knob[2] / 1000);
+	// cam.setDistance((float)map(knob[3], 0, 100, 100.0, -1200.0));
+}
  
 
 // ================================================================
@@ -271,7 +296,8 @@ public void tunnelRender(){
 		
 	for (int i = 0; i < rects; ++i) {
 
-		int alpha = (int)map(knob[10], 0, 100, 0, 255);
+		// int alpha = (int)map(knob[10], 0, 100, 0, 255);
+		int alpha = 255;
 		// int gray = rand + (50 * (i + 1));
 		int selectC = color(255);
 
@@ -289,30 +315,38 @@ public void tunnelRender(){
 		shadow_1 = color(40, 40);
 		shadow_2 = color(0, 1);
 
-		noStroke();
-		fill(fillC);
+		noFill();
+		stroke(fillC);
 
 		noiseUpdate();
 
 		float audioW = map(audioData[3], 0, 100, 4, knob[12]);
-		float audioH = map(audioData[11], 0, 100, 4, knob[11]);
+		float audioH = map(audioData[3], 0, 100, 4, knob[11]);
+		float audioD = map(audioData[3], 0, 100, 4, knob[10]);
 
 		float mappedNoise = map(n, 0, 1, -1, 1);
 		float tunnelW = mappedNoise * 10 * i;
 		float tunnelH = mappedNoise * 10 * i;
+		float tunnelD = mappedNoise * 10 * i;
 
-		float x = i * (step / 2) - ((int)audioW / 2) + tunnelW;
-		float y = i * (step / 2) - ((int)audioH / 2) - tunnelH;
-		float w = width  - (step * i) + audioW + (tunnelW * 2);
-		float h = height - (step * i) + audioH - (tunnelH * 2);
+		float x = i * (step / 2) + ((int)audioW / 2) - tunnelW;
+		float y = i * (step / 2) + ((int)audioH / 2) - tunnelH;
+		float z = i * (step / 2) + ((int)audioD / 2) - tunnelD;
+
+		float w = width  - (step * i * 2) - audioW - (tunnelW * 4);
+		float h = height - (step * i * 2) - audioH - (tunnelH * 4);
+		float d = height - (step * i * 2) - audioD - (tunnelD * 4);
 
 		if (pad[7]) ellipse(x + (w / 2), y + (h / 2), w, h);
 		if (!pad[7]) {
-			rect(x, y, w, h);
-			setGradient(x, y, PApplet.parseFloat(step / 2), h, shadow_1, shadow_2, X_AXIS);
-			setGradient((int)(w + x - (step / 2)), y, PApplet.parseFloat(step / 2), h, shadow_2, shadow_1, X_AXIS);
-			setGradient(x, y, w, PApplet.parseFloat(step / 2), shadow_1, shadow_2, Y_AXIS);
-			setGradient(x, (int)(h + y - (step / 2)), w, PApplet.parseFloat(step / 2), shadow_2, shadow_1, Y_AXIS);
+			pushMatrix();
+			 translate(x, y, z);
+				// rotateX(radians());
+				// rotateY(radians());
+				// rotateZ(radians());
+				box(w, h, d);
+			 popMatrix();
+			
 		}
 	}
 }

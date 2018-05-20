@@ -6,7 +6,7 @@ String dataPATH = "../../data";
 // ================================================================
 
 void settings(){ 
-	size(stageW, stageH);
+	size(stageW, stageH, P3D);
 	// fullScreen();
 }
 
@@ -17,6 +17,7 @@ void setup() {
 	midiSetup();
 	tunnelColorSettings();
 	audioSettings();
+	camSettings();
 }
 
 // ================================================================
@@ -24,4 +25,5 @@ void draw() {
 	background(bgC);
 	tunnelRender();
 	audioDataUpdate();
+	camUpdate();
 }
