@@ -5,6 +5,7 @@ import processing.opengl.*;
 
 import ddf.minim.*; 
 import ddf.minim.analysis.*; 
+import peasy.*; 
 import themidibus.*; 
 
 import java.util.HashMap; 
@@ -18,7 +19,7 @@ import java.io.IOException;
 
 public class build extends PApplet {
 
-int stageW      = 800;
+ int stageW      = 800;
 int stageH      = 800;
 int bgC       = 0xff2F2F2F;
 String dataPATH = "../../data";
@@ -26,7 +27,7 @@ String dataPATH = "../../data";
 // ================================================================
 
 public void settings(){ 
-	size(stageW, stageH);
+	size(stageW, stageH, P3D);
 	// fullScreen();
 }
 
@@ -37,6 +38,7 @@ public void setup() {
 	midiSetup();
 	tunnelColorSettings();
 	audioSettings();
+	camSettings();
 }
 
 // ================================================================
@@ -44,6 +46,7 @@ public void draw() {
 	background(bgC);
 	tunnelRender();
 	audioDataUpdate();
+	camUpdate();
 }
 
 
@@ -115,6 +118,27 @@ public void audioDataUpdate(){
     audioIndex = map(knob[6], 0, 100, 50, 100);
     audioIndexStep = map(knob[7], 0, 100, 2.5f, 100);
   }
+
+
+// ================================================================
+
+PeasyCam cam;
+
+// ================================================================
+
+public void camSettings(){
+	cam = new PeasyCam(this, 600);
+
+}
+
+// ================================================================
+
+public void camUpdate(){
+	// cam.rotateX((float)knob[0] / 1000);
+	// cam.rotateY((float)knob[1] / 1000);
+	// cam.rotateZ((float)knob[2] / 1000);
+	// cam.setDistance((float)map(knob[3], 0, 100, 100.0, -1200.0));
+}
  
 
 // ================================================================
@@ -193,9 +217,11 @@ public void noteOn(int channel, int number, int value) {
 }
 
 public void padSwitch(int channel, int number, int value){
-	for (int i = 0; i < padNumb; ++i) {
-			pad[i] = false;
-	}	
+
+	// for (int i = 0; i < padNumb; ++i) {
+	// 		pad[i] = false;
+	// }	
+	
 	if(number ==  9) pad[0] = !pad[0];
 	if(number == 10) pad[1] = !pad[1];
 	if(number == 11) pad[2] = !pad[2];
@@ -232,15 +258,21 @@ public void noiseUpdate(){
  	xoff += speed;
   n = noise(xoff);
 }
-int Y_AXIS = 1;
-int X_AXIS = 2;
+float angle = 0;
+float increment = 0.01f;
+int target = 0;
+float acc = 0.02f;
+
+// ================================================================
+
+float x = 0;
+float y = 0;
+float z = 0;
 
 // ================================================================
 
 int[] colors_1 = new int[5];
 int[] colors_2 = new int[5];
-int shadow_1;
-int shadow_2;
 
 // ================================================================
 
@@ -251,89 +283,60 @@ public void tunnelColorSettings(){
 	colors_1[3] = 0xff5aa3a8;
 	colors_1[4] = 0xffe5eade;
 
-	colors_2[0] = 0xff41ead4;
-	colors_2[1] = 0xffff206e;
-	colors_2[2] = 0xfffbff12;
-	colors_2[3] = 0xff65ff00;
-	colors_2[4] = 0xffff0000;
+	// colors_2[0] = #41ead4;
+	// colors_2[1] = #ff206e;
+	// colors_2[2] = #fbff12;
+	// colors_2[3] = #65ff00;
+	// colors_2[4] = #ff0000;
 }
 
 // ================================================================
 
 public void tunnelRender(){
-	int step = (int)map(knob[9], 0, 100, 20, 180);
-	float rectsControl = map(knob[8], 0, 100, 10, 80);
 
-	float rects = map(rectsControl, 4, 80, 4, (width / step));
+	float rects = 4;
 		
 	for (int i = 0; i < rects; ++i) {
-
-		int alpha = (int)map(knob[10], 0, 100, 0, 255);
-		// int gray = rand + (50 * (i + 1));
-		int selectC = color(255);
-
-		// if(pad[0]) selectC = colors_1[0];
-		// if(pad[1]) selectC = colors_1[1];
-		// if(pad[2]) selectC = colors_1[2];
-		// if(pad[3]) selectC = colors_1[3];
-		// if(pad[4]) selectC = colors_1[4];
-
 		int index = (int)map(i, 0, rects, 0, 4);
-		if(pad[1]) selectC = colors_1[index];
-		if(pad[2]) selectC = colors_2[index];
-		int fillC = color(selectC, alpha);
+		int selectC = colors_1[index];
+		int fillC = color(selectC);
 
-		shadow_1 = color(40, 40);
-		shadow_2 = color(0, 1);
+		noFill();
+		stroke(fillC);
 
-		noStroke();
-		fill(fillC);
+		float side = width / 4;
 
-		noiseUpdate();
+		x = 0;
+		y = 0;
+		z += acc;
 
-		float audioW = map(audioData[3], 0, 100, 4, knob[12]);
-		float audioH = map(audioData[11], 0, 100, 4, knob[11]);
+		if (z > 600) z = 0;
 
-		float mappedNoise = map(n, 0, 1, -1, 1);
-		float tunnelW = mappedNoise * 10 * i;
-		float tunnelH = mappedNoise * 10 * i;
+		float w = side;
+		float h = side;
+		float d = side;
 
-		float x = i * (step / 2) - ((int)audioW / 2) + tunnelW;
-		float y = i * (step / 2) - ((int)audioH / 2) - tunnelH;
-		float w = width - (step * i) + audioW + (tunnelW * 2);
-		float h = height - (step * i) + audioH - (tunnelH * 2);
+		pushMatrix();
+			translate(x, y, z);
+			rotationManager(i);
+			box(w, h, d);
+		popMatrix();
 
-
-		rect(x, y, w, h);
-		setGradient(x, y, PApplet.parseFloat(step / 2), h, shadow_1, shadow_2, X_AXIS);
-		setGradient((int)(w + x - (step / 2)), y, PApplet.parseFloat(step / 2), h, shadow_2, shadow_1, X_AXIS);
-		setGradient(x, y, w, PApplet.parseFloat(step / 2), shadow_1, shadow_2, Y_AXIS);
-		setGradient(x, (int)(h + y - (step / 2)), w, PApplet.parseFloat(step / 2), shadow_2, shadow_1, Y_AXIS);
 	}
 }
 
 // ================================================================
 
-public void setGradient(float x, float y, float w, float h, int c1, int c2, int axis ) {
-
-  noFill();
-
-  if (axis == Y_AXIS) {  // Top to bottom gradient
-    for (int i = (int)y; i <= (int)y+h; i++) {
-      float inter = map(i, y, y+h, 0, 1);
-      int c = lerpColor(c1, c2, inter);
-      stroke(c);
-      line(x, i, x+w, i);
-    }
-  }  
-  else if (axis == X_AXIS) {  // Left to right gradient
-    for (int i = (int)x; i <= (int)x+w; i++) {
-      float inter = map(i, x, x+w, 0, 1);
-      int c = lerpColor(c1, c2, inter);
-      stroke(c);
-      line(i, y, i, y+h);
-    }
-  }
+public void rotationManager(int index){
+	if (target == 4) target = 0;
+	if(index == target) {
+		rotateZ(angle);
+		angle += increment;
+	}
+	if (angle >= HALF_PI) {
+		angle = 0;
+		target++;
+	}
 }
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "build" };
