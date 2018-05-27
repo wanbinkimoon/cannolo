@@ -357,6 +357,8 @@ public void starsSettings() {
 
 public void starsRender() {
 	for (int i = 0; i < stars - 1; ++i) {
+		starLocator(i);	
+
 		starSizer(i);	
 		starPainter(i);
 
@@ -390,7 +392,22 @@ public void starPainter(int i){
 	float paint = map(zS[i], -scope, 0, 40, 200);
 
 	stroke(paint);
-	fill(paint, 10);
+	
+	noFill();
+	if(pad[7]) fill(paint, 10);
+}
+
+// ================================================================
+
+float iperSpace = 10;
+
+// ================================================================
+
+public void starLocator(int i){
+	iperSpace = map(knob[12], 0, 100, 0, 50);
+
+	if (zS[i] > scope) zS[i] = -scope;
+	else zS[i] += iperSpace;
 }
 
 
