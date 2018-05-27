@@ -53,8 +53,12 @@ void audioDataUpdate(){
   void updateAudio(){
     for (int i = 0; i < audioRange; ++i) {
       float indexAvg = (audioFFT.getAvg(i) * audioAmp) * audioIndexAmp;
-      float indexCon = constrain(indexAvg, 0, audioMax);
-      audioData[i] = indexCon;
+      float indexCon = constrain(indexAvg, audioMax, audioMax * 2);
+      
+      if(indexAvg > audioMax) audioData[i] = indexCon;
+      else audioData[i] = 100;
+
+      audioData[i] = audioData[i] / 100;
       audioIndexAmp += audioIndexStep;
     }
 

@@ -110,9 +110,8 @@ void updateColor(int i){
 	color fillC   = color(selectC);
 	// color fillC = 255;
 
-	// fill(fillC, 5);
-
 	noFill();
+	if(pad[1]) fill(fillC, 5);
 	stroke(fillC);
 }
 

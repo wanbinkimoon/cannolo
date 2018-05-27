@@ -109,8 +109,12 @@ public void audioDataUpdate(){
   public void updateAudio(){
     for (int i = 0; i < audioRange; ++i) {
       float indexAvg = (audioFFT.getAvg(i) * audioAmp) * audioIndexAmp;
-      float indexCon = constrain(indexAvg, 0, audioMax);
-      audioData[i] = indexCon;
+      float indexCon = constrain(indexAvg, audioMax, audioMax * 2);
+      
+      if(indexAvg > audioMax) audioData[i] = indexCon;
+      else audioData[i] = 100;
+
+      audioData[i] = audioData[i] / 100;
       audioIndexAmp += audioIndexStep;
     }
 
@@ -438,9 +442,8 @@ public void updateColor(int i){
 	int fillC   = color(selectC);
 	// color fillC = 255;
 
-	// fill(fillC, 5);
-
 	noFill();
+	if(pad[1]) fill(fillC, 5);
 	stroke(fillC);
 }
 

@@ -1,3 +1,6 @@
+
+
+
 int rects       = audioRange;
 int target      = 0;
 
@@ -106,11 +109,16 @@ void updateMovement(){
 
 void updateColor(int i){
 	int index     = i;
-	color selectC = colors_1[index];
-	color fillC   = color(selectC);
+	// color selectC = colors_1[index];
+
+	colorMode(HSB);
+	int hueSelector = (int)map(i, 0, rects, 10, 35);
+	color selectC = color(hueSelector, 360, 360);
+
+	color fillC   = selectC;
 	// color fillC = 255;
 
-	// fill(fillC, 5);
+	fill(fillC, 5);
 
 	noFill();
 	stroke(fillC);
