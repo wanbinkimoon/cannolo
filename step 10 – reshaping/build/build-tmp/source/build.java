@@ -258,21 +258,21 @@ public void noiseUpdate(){
  	xoff += speed;
   n = noise(xoff);
 }
-float angle = 0;
+float angle     = 0;
 float increment = 0.01f;
-int target = 0;
-float acc = 0.02f;
+int target      = 0;
+float acc       = 0.5f;
+int rects       = 4;
+// ================================================================
+
+int[] colors_1 = new int[5];
+int[] colors_2 = new int[5];
 
 // ================================================================
 
 float x = 0;
 float y = 0;
-float z = 0;
-
-// ================================================================
-
-int[] colors_1 = new int[5];
-int[] colors_2 = new int[5];
+float[] z = new float[rects];
 
 // ================================================================
 
@@ -293,8 +293,6 @@ public void tunnelColorSettings(){
 // ================================================================
 
 public void tunnelRender(){
-
-	float rects = 4;
 		
 	for (int i = 0; i < rects; ++i) {
 		int index = (int)map(i, 0, rects, 0, 4);
@@ -308,16 +306,20 @@ public void tunnelRender(){
 
 		x = 0;
 		y = 0;
-		z += acc;
+		if (frameCount < 4) z[i] = map(side * i, 0, (width / 4) * rects, -600, 600);
+		else z[i] += acc;
 
-		if (z > 600) z = 0;
-
+		if(z[i] > 600) z[i] = -600;
+		
 		float w = side;
 		float h = side;
 		float d = side;
 
+		updateMovement();
+		updateColor();
+
 		pushMatrix();
-			translate(x, y, z);
+			translate(x, y, z[i]);
 			rotationManager(i);
 			box(w, h, d);
 		popMatrix();
@@ -336,6 +338,27 @@ public void rotationManager(int index){
 	if (angle >= HALF_PI) {
 		angle = 0;
 		target++;
+	}
+}
+
+// ================================================================
+
+public void updateMovement(){
+	acc = map(knob[8], 0, 100, 0.5f, 5);
+	increment = map(knob[9], 0, 100, 0.01f, 0.5f);
+
+	println("acc: "+acc);
+}
+
+// ================================================================
+
+public void updateColor(){
+	if(pad[0]) {
+		colors_1[0] = 0xff41ead4;
+		colors_1[1] = 0xffff206e;
+		colors_1[2] = 0xfffbff12;
+		colors_1[3] = 0xff65ff00;
+		colors_1[4] = 0xffff0000;
 	}
 }
   static public void main(String[] passedArgs) {

@@ -19,7 +19,7 @@ import java.io.IOException;
 
 public class build extends PApplet {
 
- int stageW      = 800;
+int stageW      = 800;
 int stageH      = 800;
 int bgC       = 0xff2F2F2F;
 String dataPATH = "../../data";
@@ -35,18 +35,24 @@ public void settings(){
 
 public void setup() {
 	background(bgC);
+	
 	midiSetup();
-	tunnelColorSettings();
+	// camSettings();
+	viewSettings();
 	audioSettings();
-	camSettings();
+
+	tunnelColorSettings();
+	tunnelSetting();
 }
 
 // ================================================================
 public void draw() {
 	background(bgC);
+	// camUpdate();
+	viewUpdate();
+
 	tunnelRender();
 	audioDataUpdate();
-	camUpdate();
 }
 
 
@@ -127,17 +133,28 @@ PeasyCam cam;
 // ================================================================
 
 public void camSettings(){
-	cam = new PeasyCam(this, 600);
-
+	cam = new PeasyCam(this, 0, 0, width / 2 , view);
 }
 
 // ================================================================
 
 public void camUpdate(){
+	double x        = map(knob[0], 0, 100, pow(10, 4) * -1, pow(10, 4));
+	double y        = map(knob[1], 0, 100, pow(10, 4) * -1, pow(10, 4));
+	double z        = map(knob[2], 0, 100, pow(10, 4) * -1, pow(10, 4));
+	double distance = map(knob[3], 0, 100, pow(10, 4) * -1, pow(10, 4));
+
+	// println(x + " + " + y + " + " + z + " + " + distance);
+
+	println("d: "+ cam.getDistance());
+	println("p: " + cam.getLookAt()[0] + " " + cam.getLookAt()[1] + " " + cam.getLookAt()[2]);	
+
+	cam.lookAt(x, y, z, distance);
+
 	// cam.rotateX((float)knob[0] / 1000);
 	// cam.rotateY((float)knob[1] / 1000);
 	// cam.rotateZ((float)knob[2] / 1000);
-	// cam.setDistance((float)map(knob[3], 0, 100, 100.0, -1200.0));
+	// cam.setDistance((float)map(knob[3], 0, 100, -(view * 2), view * 2));
 }
  
 
@@ -257,42 +274,42 @@ boolean[] arrow = new boolean[arrowNumb];
 
 // ================================================================
 
-// void rawMidi(byte[] data) {
-// 	int number = (int)(data[1] & 0xFF);
-// 	int value = (int)(data[2] & 0xFF);
+public void rawMidi(byte[] data) {
+	int number = (int)(data[1] & 0xFF);
+	int value = (int)(data[2] & 0xFF);
 
-// 	arrowSwitch(number);
+	arrowSwitch(number);
 
-//   // Receive some raw data
-//   // data[0] will be the status byte
-//   // data[1] and data[2] will contain the parameter of the message (e.g. pitch and volume for noteOn noteOff)
-//  //  println();
-//  //  println("Raw Midi Data:");
-//  //  println("--------");
-//  //  println("Status Byte/MIDI Command:"+(int)(data[0] & 0xFF));
-// 	// println("Number: " + number);	
-// 	// println("Value: " + value);	
-// }
+  // Receive some raw data
+  // data[0] will be the status byte
+  // data[1] and data[2] will contain the parameter of the message (e.g. pitch and volume for noteOn noteOff)
+ //  println();
+ //  println("Raw Midi Data:");
+ //  println("--------");
+ //  println("Status Byte/MIDI Command:"+(int)(data[0] & 0xFF));
+	// println("Number: " + number);	
+	// println("Value: " + value);	
+}
 
 
-// void arrowSwitch(int number){
-// 	if(number == 114) arrow[0] = !arrow[0];
-// 	if(number == 115) arrow[1] = !arrow[1];
-// 	if(number == 116) arrow[2] = !arrow[2];
-// 	if(number == 117) arrow[3] = !arrow[3];
+public void arrowSwitch(int number){
+	if(number == 114) arrow[0] = !arrow[0];
+	if(number == 115) arrow[1] = !arrow[1];
+	if(number == 116) arrow[2] = !arrow[2];
+	if(number == 117) arrow[3] = !arrow[3];
 
-// 	arrowMonitor();
-// }
+	// arrowMonitor();
+}
 
-// void arrowMonitor(){
-// 	print("  0: " + arrow[0]);
-// 	print("  1: " + arrow[1]);
-// 	print("  2: " + arrow[2]);
-// 	print("  3: " + arrow[3]);
-// 	println();
-// 	println("____________________\n");
-// 	println();
-// }
+public void arrowMonitor(){
+	print("  0: " + arrow[0]);
+	print("  1: " + arrow[1]);
+	print("  2: " + arrow[2]);
+	print("  3: " + arrow[3]);
+	println();
+	println("____________________\n");
+	println();
+}
 
 float xoff = 0.0f;
 float n;
@@ -305,13 +322,14 @@ public void noiseUpdate(){
   n = noise(xoff);
 }
 
-
-
 float angle     = 0;
 float increment = 0.01f;
 int target      = 0;
 float acc       = 0.5f;
 int rects       = 4;
+float side      = width / rects; 
+float view      = side * rects;
+
 // ================================================================
 
 int[] colors_1 = new int[5];
@@ -325,40 +343,41 @@ float[] z = new float[rects];
 
 // ================================================================
 
+public void tunnelSetting(){
+
+}
+
+// ================================================================
+
 public void tunnelColorSettings(){
 	colors_1[0] = 0xffed6b5a;
 	colors_1[1] = 0xfff4f1bc;
 	colors_1[2] = 0xff9bc1bb;
 	colors_1[3] = 0xff5aa3a8;
 	colors_1[4] = 0xffe5eade;
-
-	// colors_2[0] = #41ead4;
-	// colors_2[1] = #ff206e;
-	// colors_2[2] = #fbff12;
-	// colors_2[3] = #65ff00;
-	// colors_2[4] = #ff0000;
 }
 
 // ================================================================
 
 public void tunnelRender(){
-		
+
 	for (int i = 0; i < rects; ++i) {
-		int index = (int)map(i, 0, rects, 0, 4);
+
+		int index     = (int)map(i, 0, rects, 0, 4);
 		int selectC = colors_1[index];
-		int fillC = color(selectC);
+		int fillC   = color(selectC);
+		// color fillC = 255;
 
-		noFill();
+		strokeWeight(4);
+		fill(fillC, 50);
 		stroke(fillC);
-
-		float side = width / 4;
 
 		x = 0;
 		y = 0;
-		if (frameCount < 4) z[i] = map(side * i, 0, (width / 4) * rects, -600, 600);
-		else z[i] += acc;
+		if (frameCount < rects) z[i] = map(side * (i + 1), 0, view, -view / 2, (view / 2));
 
-		if(z[i] > 600) z[i] = -600;
+		if (z[i] > view) z[i] =  0;
+		else z[i] += acc;
 		
 		float w = side;
 		float h = side;
@@ -366,6 +385,12 @@ public void tunnelRender(){
 
 		updateMovement();
 		updateColor();
+
+		if(CENTER) {
+			x += width / 2;
+			y += height / 2;
+			z[i] += 0;
+		}
 
 		pushMatrix();
 			translate(x, y, z[i]);
@@ -380,10 +405,12 @@ public void tunnelRender(){
 
 public void rotationManager(int index){
 	if (target == 4) target = 0;
+
 	if(index == target) {
 		rotateZ(angle);
 		angle += increment;
 	}
+
 	if (angle >= HALF_PI) {
 		angle = 0;
 		target++;
@@ -413,6 +440,59 @@ public void updateColor(){
 		colors_1[3] = 0xff5aa3a8;
 		colors_1[4] = 0xffe5eade;
 	}
+}
+boolean CENTER = true;
+
+// ================================================================
+
+float eyeX;
+float eyeY;
+float eyeZ;
+float centerX;
+float centerY;
+float centerZ;
+float upX;
+float upY;
+float upZ;
+
+// ================================================================
+
+public void viewSettings(){
+	eyeX    =  width / 2;
+	eyeY    =  height / 2; 
+	eyeZ    = (height / 2) / tan(PI * 30.0f / 180.0f);
+	centerX = width / 2;
+	centerY = height / 2;
+	centerZ = 0.0f;
+	upX     = 0.0f; 
+	upY     = 1.0f;
+	upZ     = 0.0f;
+
+	println("eyeZ: "+ eyeZ);	
+
+	camera(eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
+}
+
+// ================================================================
+
+public void viewUpdate(){
+	perspective();
+
+	eyeX = map(knob[0], 0, 100, -1000, 1000);
+	eyeY = map(knob[1], 0, 100, -1000, 1000);
+	eyeZ = map(knob[2], 0, 100, -1000, 1000);
+
+	// eyeX    = 
+	// eyeY    = 
+	// centerX = 
+	// centerY = 
+	// centerZ = 
+	// upX     = 
+	// upY     = 
+	// upZ     = 
+
+	camera(eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
+
 }
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "build" };

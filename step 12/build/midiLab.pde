@@ -116,39 +116,39 @@ boolean[] arrow = new boolean[arrowNumb];
 
 // ================================================================
 
-// void rawMidi(byte[] data) {
-// 	int number = (int)(data[1] & 0xFF);
-// 	int value = (int)(data[2] & 0xFF);
+void rawMidi(byte[] data) {
+	int number = (int)(data[1] & 0xFF);
+	int value = (int)(data[2] & 0xFF);
 
-// 	arrowSwitch(number);
+	arrowSwitch(number);
 
-//   // Receive some raw data
-//   // data[0] will be the status byte
-//   // data[1] and data[2] will contain the parameter of the message (e.g. pitch and volume for noteOn noteOff)
-//  //  println();
-//  //  println("Raw Midi Data:");
-//  //  println("--------");
-//  //  println("Status Byte/MIDI Command:"+(int)(data[0] & 0xFF));
-// 	// println("Number: " + number);	
-// 	// println("Value: " + value);	
-// }
+  // Receive some raw data
+  // data[0] will be the status byte
+  // data[1] and data[2] will contain the parameter of the message (e.g. pitch and volume for noteOn noteOff)
+ //  println();
+ //  println("Raw Midi Data:");
+ //  println("--------");
+ //  println("Status Byte/MIDI Command:"+(int)(data[0] & 0xFF));
+	// println("Number: " + number);	
+	// println("Value: " + value);	
+}
 
 
-// void arrowSwitch(int number){
-// 	if(number == 114) arrow[0] = !arrow[0];
-// 	if(number == 115) arrow[1] = !arrow[1];
-// 	if(number == 116) arrow[2] = !arrow[2];
-// 	if(number == 117) arrow[3] = !arrow[3];
+void arrowSwitch(int number){
+	if(number == 114) arrow[0] = !arrow[0];
+	if(number == 115) arrow[1] = !arrow[1];
+	if(number == 116) arrow[2] = !arrow[2];
+	if(number == 117) arrow[3] = !arrow[3];
 
-// 	arrowMonitor();
-// }
+	// arrowMonitor();
+}
 
-// void arrowMonitor(){
-// 	print("  0: " + arrow[0]);
-// 	print("  1: " + arrow[1]);
-// 	print("  2: " + arrow[2]);
-// 	print("  3: " + arrow[3]);
-// 	println();
-// 	println("____________________\n");
-// 	println();
-// }
+void arrowMonitor(){
+	print("  0: " + arrow[0]);
+	print("  1: " + arrow[1]);
+	print("  2: " + arrow[2]);
+	print("  3: " + arrow[3]);
+	println();
+	println("____________________\n");
+	println();
+}
