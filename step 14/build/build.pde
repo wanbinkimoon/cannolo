@@ -27,9 +27,9 @@ void setup() {
 // ================================================================
 void draw() {
 	background(bgC);
+	audioDataUpdate();
 	camUpdate();
 	// viewUpdate();
 
 	tunnelRender();
-	audioDataUpdate();
 }

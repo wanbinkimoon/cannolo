@@ -3,14 +3,14 @@ float angle     = 0;
 float increment = 0.01;
 int target      = 0;
 float acc       = 0.5;
-int rects       = 4;
+int rects       = 12;
 float side      = stageW / rects; 
 float view      = side * rects;
 
 // ================================================================
 
-color[] colors_1 = new color[5];
-color[] colors_2 = new color[5];
+color[] colors_1 = new color[rects];
+color[] colors_2 = new color[rects];
 
 // ================================================================
 
@@ -27,11 +27,18 @@ void tunnelSetting(){
 // ================================================================
 
 void tunnelColorSettings(){
-	colors_1[0] = #ed6b5a;
-	colors_1[1] = #f4f1bc;
-	colors_1[2] = #9bc1bb;
-	colors_1[3] = #5aa3a8;
-	colors_1[4] = #e5eade;
+	colors_1[0]  = #ffd700;
+	colors_1[1]  = #ffca00;
+	colors_1[2]  = #ffbc00;
+	colors_1[3]  = #ffaf00;
+	colors_1[4]  = #ffa200;
+	colors_1[5]  = #ff9500;
+	colors_1[6]  = #ff8700;
+	colors_1[7]  = #ff7a00;
+	colors_1[8]  = #ff6d00;
+	colors_1[9]  = #ff6000;
+	colors_1[10] = #ff5200;
+	colors_1[11] = #ff4500;
 }
 
 // ================================================================
@@ -40,12 +47,14 @@ void tunnelRender(){
 
 	for (int i = 0; i < rects; ++i) {
 
-		int index     = (int)map(i, 0, rects, 0, 4);
+		int index     = i;
 		color selectC = colors_1[index];
 		color fillC   = color(selectC);
 		// color fillC = 255;
 
-		strokeWeight(4);
+		int strokeW = (int)map(knob[10], 0, 100, 1, 20);
+		strokeWeight(strokeW);
+
 		// fill(fillC, 5);
 		noFill();
 		stroke(fillC);
@@ -109,17 +118,4 @@ void updateMovement(){
 // ================================================================
 
 void updateColor(){
-	if(pad[0]) {
-		colors_1[0] = #41ead4;
-		colors_1[1] = #ff206e;
-		colors_1[2] = #fbff12;
-		colors_1[3] = #65ff00;
-		colors_1[4] = #ff0000;
-	} else {
-		colors_1[0] = #ed6b5a;
-		colors_1[1] = #f4f1bc;
-		colors_1[2] = #9bc1bb;
-		colors_1[3] = #5aa3a8;
-		colors_1[4] = #e5eade;
-	}
 }

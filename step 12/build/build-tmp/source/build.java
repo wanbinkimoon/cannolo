@@ -37,8 +37,8 @@ public void setup() {
 	background(bgC);
 	
 	midiSetup();
-	// camSettings();
-	viewSettings();
+	camSettings();
+	// viewSettings();
 	audioSettings();
 
 	tunnelColorSettings();
@@ -48,8 +48,8 @@ public void setup() {
 // ================================================================
 public void draw() {
 	background(bgC);
-	// camUpdate();
-	viewUpdate();
+	camUpdate();
+	// viewUpdate();
 
 	tunnelRender();
 	audioDataUpdate();
@@ -133,7 +133,7 @@ PeasyCam cam;
 // ================================================================
 
 public void camSettings(){
-	cam = new PeasyCam(this, 0, 0, width / 2 , view);
+	cam = new PeasyCam(this, 600);
 }
 
 // ================================================================
@@ -146,10 +146,10 @@ public void camUpdate(){
 
 	// println(x + " + " + y + " + " + z + " + " + distance);
 
-	println("d: "+ cam.getDistance());
-	println("p: " + cam.getLookAt()[0] + " " + cam.getLookAt()[1] + " " + cam.getLookAt()[2]);	
+	// println("d: "+ cam.getDistance());
+	// println("p: " + cam.getLookAt()[0] + " " + cam.getLookAt()[1] + " " + cam.getLookAt()[2]);	
 
-	cam.lookAt(x, y, z, distance);
+	// cam.lookAt(x, y, z, distance);
 
 	// cam.rotateX((float)knob[0] / 1000);
 	// cam.rotateY((float)knob[1] / 1000);
@@ -327,7 +327,7 @@ float increment = 0.01f;
 int target      = 0;
 float acc       = 0.5f;
 int rects       = 4;
-float side      = width / rects; 
+float side      = stageW / rects; 
 float view      = side * rects;
 
 // ================================================================
@@ -369,14 +369,19 @@ public void tunnelRender(){
 		// color fillC = 255;
 
 		strokeWeight(4);
-		fill(fillC, 50);
+		// fill(fillC, 5);
+		noFill();
 		stroke(fillC);
 
 		x = 0;
 		y = 0;
-		if (frameCount < rects) z[i] = map(side * (i + 1), 0, view, -view / 2, (view / 2));
+		// z[i] = map(side * i, 0, (width / 4) * rects, -600, 600);
 
-		if (z[i] > view) z[i] =  0;
+		float scope = view / 2;
+
+		if (frameCount < rects) z[i] = map(side * i, 0, view, -scope, scope);
+
+		if (z[i] > scope) z[i] = -scope;
 		else z[i] += acc;
 		
 		float w = side;
@@ -441,7 +446,7 @@ public void updateColor(){
 		colors_1[4] = 0xffe5eade;
 	}
 }
-boolean CENTER = true;
+boolean CENTER = false;
 
 // ================================================================
 
@@ -460,15 +465,14 @@ float upZ;
 public void viewSettings(){
 	eyeX    =  width / 2;
 	eyeY    =  height / 2; 
-	eyeZ    = (height / 2) / tan(PI * 30.0f / 180.0f);
+	// eyeZ    = (height / 2) / tan(PI * 30.0 / 180.0);
+	eyeZ 		= 0;
 	centerX = width / 2;
 	centerY = height / 2;
 	centerZ = 0.0f;
 	upX     = 0.0f; 
 	upY     = 1.0f;
 	upZ     = 0.0f;
-
-	println("eyeZ: "+ eyeZ);	
 
 	camera(eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
 }
@@ -478,9 +482,9 @@ public void viewSettings(){
 public void viewUpdate(){
 	perspective();
 
-	eyeX = map(knob[0], 0, 100, -1000, 1000);
-	eyeY = map(knob[1], 0, 100, -1000, 1000);
-	eyeZ = map(knob[2], 0, 100, -1000, 1000);
+	// eyeX = map(knob[0], 0, 100, -1000, 1000);
+	// eyeY = map(knob[1], 0, 100, -1000, 1000);
+	// eyeZ = map(knob[2], 0, 100, -1000, 1000);
 
 	// eyeX    = 
 	// eyeY    = 
