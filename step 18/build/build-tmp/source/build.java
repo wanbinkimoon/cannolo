@@ -27,8 +27,8 @@ String dataPATH = "../../data";
 // ================================================================
 
 public void settings(){ 
-	// size(stageW, stageH, P3D);
-	fullScreen(P3D);
+	size(stageW, stageH, P3D);
+	// fullScreen(P3D);
 }
 
 // ================================================================
@@ -57,6 +57,35 @@ public void draw() {
 	
 	starsRender();
 	tunnelRender();
+}
+
+// ================================================================
+
+public void keyPressed(){	
+	switch (key) {
+		case 'q':
+			exit();
+		case 'p':
+			screenShot();
+		break;
+	}
+}
+
+// ================================================================
+
+boolean letsRender = false;
+int     renderNum  = 0;
+String  renderPATH = "../render/";
+
+// ================================================================
+
+public void screenShot(){
+	letsRender = true;
+	if (letsRender) {
+		letsRender = false;
+		save(renderPATH + renderNum + ".png");
+		renderNum++;
+	}
 }
 
 
@@ -335,7 +364,7 @@ public void noiseUpdate(){
   n = noise(xoff);
 }
 
-int stars = 40;
+int stars = 200;
 
 // ================================================================
 	
@@ -358,15 +387,16 @@ public void starsSettings() {
 public void starsRender() {
 	for (int i = 0; i < stars - 1; ++i) {
 		starLocator(i);	
-
 		starSizer(i);	
 		starPainter(i);
+		starSound(i);
 
 		pushMatrix();
 			translate(xS[i], yS[i], zS[i]);
 
-			sphereDetail(4);
+			sphereDetail(10);
 			sphere(sizeS[i]);
+
 		 popMatrix();
 	}
 }
@@ -376,25 +406,25 @@ public void starsRender() {
 public void starsPositioning(int i) {
 	xS[i] = random(-scope, scope);
 	yS[i] = random(-scope, scope);
-	zS[i] = random(-scope, 0);
+	zS[i] = random(-scope, scope);
 }
 
 // ================================================================
 
 public void starSizer(int i){
-	float sizer = map(zS[i], -scope, 0, 2, 12);
+	float sizer = map(zS[i], -scope, scope, 2, 6);
 	sizeS[i] = sizer;
 }
 
 // ================================================================
 
 public void starPainter(int i){
-	float paint = map(zS[i], -scope, 0, 40, 200);
+	int paint = (int)map(zS[i], -scope, 0, 0, 200);
 
-	stroke(paint);
-	
+	stroke(255, paint);
+
 	noFill();
-	if(pad[7]) fill(paint, 10);
+	if(pad[7]) fill(255, paint);
 }
 
 // ================================================================
@@ -404,10 +434,20 @@ float iperSpace = 10;
 // ================================================================
 
 public void starLocator(int i){
-	iperSpace = map(knob[12], 0, 100, 0, 50);
+	iperSpace = map(knob[12], 0, 100, 0, 10);
 
-	if (zS[i] > scope) zS[i] = -scope;
+	if (zS[i] > scope) {
+		xS[i] = random(-scope, scope);
+		yS[i] = random(-scope, scope);
+		zS[i] = -scope;
+	}
 	else zS[i] += iperSpace;
+}
+
+// ================================================================
+
+public void starSound(int i){
+	sizeS[i] = sizeS[i] * audioData[4];
 }
 
 
@@ -416,7 +456,7 @@ int rects       = audioRange;
 int target      = 0;
 
 float acc       = 0.5f;
-float increment = 0.01f;
+float increment = 0.0f;
 float resistance = 0.0f;
 float[] angle     = new float[rects];
 
@@ -482,12 +522,12 @@ public void tunnelRender(){
 // ================================================================
 
 public void rotationManager(int i){
-	if (target == rects) target = 0;
+	if (target == rects - 1) target = 0;
 
 	if(i == target) {
 		angle[i] += increment;
 	} else {
-		angle[i] -= resistance;
+		angle[i] += increment - resistance;
 	}
 
 	rotateZ(angle[i]);
@@ -505,8 +545,8 @@ public void rotationManager(int i){
 
 public void updateMovement(){
 	acc = map(knob[8], 0, 100, 0.5f, 5);
-	increment = map(knob[9], 0, 100, 0.01f, 0.5f);
-	resistance = map(knob[10], 0, 100, 0.0f, 0.05f);
+	increment = map(knob[9], 0, 100, 0.0f, 0.5f);
+	resistance = map(knob[10], 0, 100, 0.0f, 0.5f);
 
 	if (pad[0]) {
 		for (int i = 0; i < angle.length; ++i) {

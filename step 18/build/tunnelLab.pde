@@ -5,7 +5,7 @@ int rects       = audioRange;
 int target      = 0;
 
 float acc       = 0.5;
-float increment = 0.01;
+float increment = 0.0;
 float resistance = 0.0;
 float[] angle     = new float[rects];
 
@@ -71,12 +71,12 @@ void tunnelRender(){
 // ================================================================
 
 void rotationManager(int i){
-	if (target == rects) target = 0;
+	if (target == rects - 1) target = 0;
 
 	if(i == target) {
 		angle[i] += increment;
 	} else {
-		angle[i] -= resistance;
+		angle[i] += increment - resistance;
 	}
 
 	rotateZ(angle[i]);
@@ -94,8 +94,8 @@ void rotationManager(int i){
 
 void updateMovement(){
 	acc = map(knob[8], 0, 100, 0.5, 5);
-	increment = map(knob[9], 0, 100, 0.01, 0.5);
-	resistance = map(knob[10], 0, 100, 0.0, 0.05);
+	increment = map(knob[9], 0, 100, 0.0, 0.5);
+	resistance = map(knob[10], 0, 100, 0.0, 0.5);
 
 	if (pad[0]) {
 		for (int i = 0; i < angle.length; ++i) {

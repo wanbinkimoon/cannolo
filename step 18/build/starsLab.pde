@@ -1,5 +1,5 @@
 
-int stars = 40;
+int stars = 200;
 
 // ================================================================
 	
@@ -22,15 +22,16 @@ void starsSettings() {
 void starsRender() {
 	for (int i = 0; i < stars - 1; ++i) {
 		starLocator(i);	
-
 		starSizer(i);	
 		starPainter(i);
+		starSound(i);
 
 		pushMatrix();
 			translate(xS[i], yS[i], zS[i]);
 
-			sphereDetail(4);
+			sphereDetail(10);
 			sphere(sizeS[i]);
+
 		 popMatrix();
 	}
 }
@@ -40,25 +41,25 @@ void starsRender() {
 void starsPositioning(int i) {
 	xS[i] = random(-scope, scope);
 	yS[i] = random(-scope, scope);
-	zS[i] = random(-scope, 0);
+	zS[i] = random(-scope, scope);
 }
 
 // ================================================================
 
 void starSizer(int i){
-	float sizer = map(zS[i], -scope, 0, 2, 12);
+	float sizer = map(zS[i], -scope, scope, 2, 6);
 	sizeS[i] = sizer;
 }
 
 // ================================================================
 
 void starPainter(int i){
-	float paint = map(zS[i], -scope, 0, 40, 200);
+	int paint = (int)map(zS[i], -scope, 0, 0, 200);
 
-	stroke(paint);
-	
+	stroke(255, paint);
+
 	noFill();
-	if(pad[7]) fill(paint, 10);
+	if(pad[7]) fill(255, paint);
 }
 
 // ================================================================
@@ -68,8 +69,18 @@ float iperSpace = 10;
 // ================================================================
 
 void starLocator(int i){
-	iperSpace = map(knob[12], 0, 100, 0, 50);
+	iperSpace = map(knob[12], 0, 100, 0, 10);
 
-	if (zS[i] > scope) zS[i] = -scope;
+	if (zS[i] > scope) {
+		xS[i] = random(-scope, scope);
+		yS[i] = random(-scope, scope);
+		zS[i] = -scope;
+	}
 	else zS[i] += iperSpace;
+}
+
+// ================================================================
+
+void starSound(int i){
+	sizeS[i] = sizeS[i] * audioData[4];
 }

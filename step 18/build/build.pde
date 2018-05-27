@@ -6,8 +6,8 @@ String dataPATH = "../../data";
 // ================================================================
 
 void settings(){ 
-	// size(stageW, stageH, P3D);
-	fullScreen(P3D);
+	size(stageW, stageH, P3D);
+	// fullScreen(P3D);
 }
 
 // ================================================================
@@ -36,4 +36,33 @@ void draw() {
 	
 	starsRender();
 	tunnelRender();
+}
+
+// ================================================================
+
+void keyPressed(){	
+	switch (key) {
+		case 'q':
+			exit();
+		case 'p':
+			screenShot();
+		break;
+	}
+}
+
+// ================================================================
+
+boolean letsRender = false;
+int     renderNum  = 0;
+String  renderPATH = "../render/";
+
+// ================================================================
+
+void screenShot(){
+	letsRender = true;
+	if (letsRender) {
+		letsRender = false;
+		save(renderPATH + renderNum + ".png");
+		renderNum++;
+	}
 }
