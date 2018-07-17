@@ -27,8 +27,11 @@ String dataPATH = "../../data";
 // ================================================================
 
 public void settings(){ 
+	// fullScreen(P3D, 2);
+	// fullScreen(P3D, SPAN);
 	size(stageW, stageH, P3D);
-	// fullScreen(P3D);
+	pixelDensity(displayDensity());	
+
 }
 
 // ================================================================
@@ -157,7 +160,6 @@ public void audioDataUpdate(){
   // ================================================================
   
   public void audioMidiValueUpdate(){
-    audioAmp = map(knob[5], 0, 100, 0, 600);
     audioIndex = map(knob[6], 0, 100, 0.0f, 0.1f);
     audioIndexStep = map(knob[7], 0, 100, 0.0f, 0.1f);
   }

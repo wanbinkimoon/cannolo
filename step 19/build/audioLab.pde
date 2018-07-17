@@ -68,7 +68,6 @@ void audioDataUpdate(){
   // ================================================================
   
   void audioMidiValueUpdate(){
-    audioAmp = map(knob[5], 0, 100, 0, 600);
     audioIndex = map(knob[6], 0, 100, 0.0, 0.1);
     audioIndexStep = map(knob[7], 0, 100, 0.0, 0.1);
   }

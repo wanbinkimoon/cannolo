@@ -6,8 +6,11 @@ String dataPATH = "../../data";
 // ================================================================
 
 void settings(){ 
+	// fullScreen(P3D, 2);
+	// fullScreen(P3D, SPAN);
 	size(stageW, stageH, P3D);
-	// fullScreen(P3D);
+	pixelDensity(displayDensity());	
+
 }
 
 // ================================================================
